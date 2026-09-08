@@ -1,0 +1,218 @@
+:root {
+  color-scheme: dark;
+  
+  /* Latar Belakang & Struktur */
+  --bg-main: #121212;      /* Halaman utama */
+  --bg-card: #1E1E1E;      /* Kartu / Konten */
+  --bg-popover: #2D2D2D;   /* Dropdown / Modal */
+  --border-color: #333333; /* Garis pembatas */
+  
+  /* Tipografi / Teks */
+  --text-main: #E0E0E0;     /* Teks utama (nyaman di mata) */
+  --text-muted: #A0A0A0;    /* Teks sekunder */
+  --text-disabled: #666666; /* Teks tidak aktif */
+  
+  /* Komponen Utama & Interaksi */
+  --accent-color: #BB86FC;  /* Ungu utama */
+  --accent-hover: #9A66E2;  /* Ungu saat hover */
+  
+  /* Indikator Sistem */
+  --status-success: #4CAF50; /* Berhasil */
+  --status-error: #CF6679;   /* Gagal / Eror */
+}
+
+
+
+/* === GLOBAL RESET === */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+
+
+/* === CONTAINER === */
+
+.notes-app {
+  color: var(--text-main);
+  background-color: var(--bg-main);
+  height: 100vh;
+  display: flex;
+  gap: 1rem;
+}
+
+.sidebar {
+  width: 400px;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.container {
+  background-color: var(--bg-card);
+  height: 100%;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notes-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notes-manager {
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.notes-container {
+  flex: 1;
+  max-height: 471px;
+  display: flex;
+  flex-direction: column;
+  /* background-color: blue; */
+}
+
+.notes-list {
+  flex: 1;
+  overflow: hidden auto;
+}
+
+.note-editor {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.head-editor {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+
+
+/* === CONTENT === */
+
+.app-title {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+}
+
+.sidebar-title {
+  font-weight: bold;
+}
+
+.btn {
+  line-height: 0;
+  font-size: 1.01rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  border-radius: 1rem;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--text-disabled);
+}
+
+.title-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.5rem 1rem;
+}
+
+.save-btn {
+  background-color: var(--accent-color);
+  font-weight: bold;
+  border: none;
+  border-radius: 1rem;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.save-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.content-input {
+  height: 300px;
+  padding: 1rem;
+}
+
+.separator {
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: 1px;
+}
+
+
+
+/* === LIST ITEM === */
+.note-item {
+  list-style-position: inside;
+  /* font-weight: bold; */
+  white-space: nowrap;
+  border-radius: 0.5rem;
+  margin-bottom: 2px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.note-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.note-wrapper {
+  white-space: wrap;
+  width: 100%;
+  max-width: calc(100% - 1rem);
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  /* pointer-events: none; */
+}
+
+.note-active {
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.note-active:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.note-active::marker {
+  font-weight: bold;
+}
