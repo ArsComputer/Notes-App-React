@@ -3,7 +3,7 @@ import { Sidebar } from "./components/sidebar.jsx";
 
 function App() {
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedNote, setSelectedNote] = useState({ title: "", content: "" });
 
   function handleWhenSelectNote(note) {
     setSelectedNote(note);
@@ -24,6 +24,16 @@ function App() {
   }
 
   function handleSaveNote() {
+    if (!selectedNote.id) {
+      const id = crypto.randomUUID();
+      const newNote = { id, ...selectedNote };
+
+      handleWhenAddNote(newNote);
+      handleWhenSelectNote(newNote);
+
+      return;
+    }
+
     const updatedNotes = notes.map((note) => {
       if (note.id !== selectedNote.id) return note;
 
@@ -50,7 +60,7 @@ function App() {
                 placeholder="Judul"
                 className="title-input"
                 id="title-input"
-                value={selectedNote?.title || ""}
+                value={selectedNote.title}
                 onChange={(e) => handleInputChange(e.target.value, "title")}
               />
               <button
@@ -66,7 +76,7 @@ function App() {
               placeholder="Masukkan catatan..."
               className="content-input"
               id="content-input"
-              value={selectedNote?.content || ""}
+              value={selectedNote.content}
               onChange={(e) => handleInputChange(e.target.value, "content")}
             ></textarea>
           </div>

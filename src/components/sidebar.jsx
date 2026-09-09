@@ -1,11 +1,11 @@
 import { NoteCard } from "./noteCard.jsx";
 
-export function Sidebar({notes, onAddNote, onNoteSelect}) {
+export function Sidebar({ notes, onAddNote, onNoteSelect }) {
   function handleAddNote() {
     const newNote = {
       id: crypto.randomUUID(),
-      title: prompt('Tambahkan Judul Catatan Mu'),
-      content: prompt('Tulis Catatan'),
+      title: 'Untitled',
+      content: '',
     };
 
     onAddNote(newNote);
@@ -16,7 +16,6 @@ export function Sidebar({notes, onAddNote, onNoteSelect}) {
     const newNotesList = notes.filter(note => note.id !== noteId);
 
     setNotes(newNotesList);
-    // console.log(newNotesList)
   }
 
   const NotesList = notes.map(note =>
