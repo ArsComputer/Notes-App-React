@@ -1,6 +1,6 @@
 import { NoteCard } from "./noteCard.jsx";
 
-export function Sidebar({ notes, onAddNote, onNoteSelect }) {
+export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
   function handleAddNote() {
     const newNote = {
       id: crypto.randomUUID(),
@@ -15,7 +15,7 @@ export function Sidebar({ notes, onAddNote, onNoteSelect }) {
   function handleDeleteNote(noteId) {
     const newNotesList = notes.filter(note => note.id !== noteId);
 
-    setNotes(newNotesList);
+    onDeleteNote(newNotesList);
   }
 
   const NotesList = notes.map(note =>
