@@ -1,26 +1,15 @@
-import { useState } from "react";
 import { NoteCard } from "./noteCard.jsx";
 
-export function Sidebar() {
-  const [notes, setNotes] = useState([{
-    id: 1,
-    title: "Note 1",
-    content: "This is the content of note 1."
-  },
-  {
-    id: 2,
-    title: "Note 2",
-    content: "This is the content of note 2."
-  }]);
-
-  function handleAddNotes() {
+export function Sidebar({notes, onAddNote, onNoteSelect}) {
+  function handleAddNote() {
     const newNote = {
       id: crypto.randomUUID(),
       title: prompt('Tambahkan Judul Catatan Mu'),
       content: prompt('Tulis Catatan'),
     };
 
-    setNotes([...notes, newNote]);
+    onAddNote(newNote);
+    onNoteSelect(newNote);
   }
 
   function handleDeleteNote(noteId) {
@@ -31,7 +20,7 @@ export function Sidebar() {
   }
 
   const NotesList = notes.map(note =>
-    <NoteCard key={note.id} note={note} onDelete={handleDeleteNote} />
+    <NoteCard key={note.id} note={note} onDelete={handleDeleteNote} onSelect={onNoteSelect} />
   );
 
   return (
@@ -44,7 +33,7 @@ export function Sidebar() {
         <div className="notes-box">
           <div className="notes-manager">
             <span className="sidebar-title">Catatan</span>
-            <button type="button" className="btn" id="new-btn" onClick={handleAddNotes}>
+            <button type="button" className="btn" id="new-btn" onClick={handleAddNote}>
               +
             </button>
           </div>

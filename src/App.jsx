@@ -1,13 +1,39 @@
-// import { useState } from 'react'
-// import { NoteCard } from "./components/noteCard";
+import { useState } from 'react'
 import { Sidebar } from "./components/sidebar.jsx";
 
 function App() {
-  // const [note, setNote] = useState('')
+  const [notes, setNotes] = useState([]);
+  const [selectedNote, setSelectedNote] = useState(null);
+
+  function handleWhenSelectNote(note) {
+    setSelectedNote(note);
+  }
+
+  function handleWhenAddNote(newNote) {
+    setNotes([...notes, newNote]);
+    // TODO: simpan ke local storage
+  }
+
+  function handleInputChange(value, notePropertyName) {
+    if (!selectedNote) return;
+
+    setSelectedNote({
+      ...selectedNote,
+      [notePropertyName]: value
+    })
+  }
+
+  // function handleSaveNotes() {
+    
+  // }
 
   return (
     <div className="notes-app">
-      <Sidebar />
+      <Sidebar
+        notes={notes}
+        onAddNote={handleWhenAddNote}
+        onNoteSelect={handleWhenSelectNote}
+      />
 
       <main className="main-content">
         <div className="container">
@@ -18,6 +44,8 @@ function App() {
                 placeholder="Judul"
                 className="title-input"
                 id="title-input"
+                value={selectedNote?.title || ""}
+                onChange={(e) => handleInputChange(e.target.value, "title")}
               />
               <button type="button" className="save-btn" id="save-btn">
                 Simpan
@@ -27,6 +55,8 @@ function App() {
               placeholder="Masukkan catatan..."
               className="content-input"
               id="content-input"
+              value={selectedNote?.content || ""}
+              onChange={(e) => handleInputChange(e.target.value, "content")}
             ></textarea>
           </div>
         </div>
