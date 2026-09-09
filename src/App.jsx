@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import { Sidebar } from "./components/sidebar.jsx";
 
 function App() {
@@ -19,13 +19,19 @@ function App() {
 
     setSelectedNote({
       ...selectedNote,
-      [notePropertyName]: value
-    })
+      [notePropertyName]: value,
+    });
   }
 
-  // function handleSaveNotes() {
-    
-  // }
+  function handleSaveNote() {
+    const updatedNotes = notes.map((note) => {
+      if (note.id !== selectedNote.id) return note;
+
+      return selectedNote;
+    });
+
+    setNotes(updatedNotes);
+  }
 
   return (
     <div className="notes-app">
@@ -47,7 +53,12 @@ function App() {
                 value={selectedNote?.title || ""}
                 onChange={(e) => handleInputChange(e.target.value, "title")}
               />
-              <button type="button" className="save-btn" id="save-btn">
+              <button
+                type="button"
+                className="save-btn"
+                id="save-btn"
+                onClick={handleSaveNote}
+              >
                 Simpan
               </button>
             </div>
