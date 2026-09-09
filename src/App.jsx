@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "./components/sidebar.jsx";
 
-function App() {
+export default function App() {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState({ title: "", content: "" });
+
+  useEffect(() => {
+    const savedNotes = JSON.parse(localStorage.getItem('notes'));
+    setNotes(savedNotes);
+  }, []);
 
   function handleWhenSelectNote(note) {
     setSelectedNote(note);
   }
 
   function handleWhenAddNote(newNote) {
-    setNotes([...notes, newNote]);
-    // TODO: simpan ke local storage
+    const newNotes = [...notes, newNote];
+
+    setNotes(newNotes);
+    localStorage.setItem('notes' ,JSON.stringify(newNotes));
+  }
+
+  function handleWhenDeleteNote(newNotes) {
+    setNotes(newNotes);
+    localStorage.setItem("notes", JSON.stringify(newNotes));
   }
 
   function handleInputChange(value, notePropertyName) {
@@ -41,6 +53,7 @@ function App() {
     });
 
     setNotes(updatedNotes);
+    localStorage.setItem('notes', JSON.stringify(updatedNotes));
   }
 
   return (
@@ -49,6 +62,7 @@ function App() {
         notes={notes}
         onAddNote={handleWhenAddNote}
         onNoteSelect={handleWhenSelectNote}
+        onDeleteNote={handleWhenDeleteNote}
       />
 
       <main className="main-content">
@@ -85,5 +99,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
