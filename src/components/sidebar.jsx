@@ -21,8 +21,17 @@ export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
     onDeleteNote(newNotesList);
   }
 
+  function cardClickHandler(target, note) {
+    if (target.classList.contains('delete-button')) {
+      handleDeleteNote(note.id);
+      return;
+    }
+
+    onNoteSelect(note, notes);
+  }
+
   const NotesList = notes.map(note =>
-    <NoteCard key={note.id} note={note} onDelete={handleDeleteNote} onSelect={onNoteSelect} />
+    <NoteCard key={note.id} note={note} onCardClick={cardClickHandler} />
   );
 
   return (

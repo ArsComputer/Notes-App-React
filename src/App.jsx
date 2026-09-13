@@ -1,25 +1,25 @@
-// BUG: bug aneh waktu add note pake tombol +, notenya ga nambah tapi di state notes tapi udah nambah di local storage nya, jadinya notes card ga kerender.
-
 import { useState, useEffect } from "react";
 import { Sidebar } from "./components/sidebar.jsx";
 
 export default function App() {
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(
-    { id: "", title: "", content: "", isSelected: false }
-  );
+  const [selectedNote, setSelectedNote] = useState({
+    id: "",
+    title: "",
+    content: "",
+    isSelected: false,
+  });
 
   useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem('notes'));
+    const savedNotes = JSON.parse(localStorage.getItem("notes"));
     setNotes(savedNotes || notes);
   }, []);
-  // console.log(notes)
-  
+  console.log(selectedNote);
+
   function handleWhenSelectNote(note, newNotes = notes) {
     const updatedNote = { ...note, isSelected: true };
     const updatedNotes = newNotes.map((n) => {
-      if (n.id !== note.id)
-        return { ...n, isSelected: false };
+      if (n.id !== note.id) return { ...n, isSelected: false };
 
       return updatedNote;
     });
@@ -29,8 +29,13 @@ export default function App() {
   }
 
   function handleWhenAddNote(newNotes) {
-    setNotes(newNotes);
-    localStorage.setItem('notes' ,JSON.stringify(newNotes));
+    const neutralNotes = newNotes.map((note) => ({
+      ...note,
+      isSelected: false,
+    }));
+
+    setNotes(neutralNotes);
+    localStorage.setItem("notes", JSON.stringify(neutralNotes));
   }
 
   function handleWhenDeleteNote(newNotes) {
@@ -47,13 +52,14 @@ export default function App() {
     });
   }
 
-  function handleSaveNote(target) {
+  function handleSaveNote() {
     if (!selectedNote.id) {
       const id = crypto.randomUUID();
       const newNote = { ...selectedNote, id };
+      const newNotes = [...notes, newNote];
 
-      handleWhenAddNote(newNote);
-      handleWhenSelectNote(newNote, target);
+      handleWhenAddNote(newNotes);
+      handleWhenSelectNote(newNote, newNotes);
 
       return;
     }
@@ -65,7 +71,7 @@ export default function App() {
     });
 
     setNotes(updatedNotes);
-    localStorage.setItem('notes', JSON.stringify(updatedNotes));
+    localStorage.setItem("notes", JSON.stringify(updatedNotes));
   }
 
   return (
@@ -93,7 +99,7 @@ export default function App() {
                 type="button"
                 className="save-btn"
                 id="save-btn"
-                onClick={(e) => handleSaveNote(e.target)}
+                onClick={handleSaveNote}
               >
                 Simpan
               </button>
