@@ -1,17 +1,31 @@
+// BUG: bug aneh waktu add note pake tombol +, notenya ga nambah tapi di state notes tapi udah nambah di local storage nya, jadinya notes card ga kerender.
+
 import { useState, useEffect } from "react";
 import { Sidebar } from "./components/sidebar.jsx";
 
 export default function App() {
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState({ title: "", content: "" });
+  const [selectedNote, setSelectedNote] = useState(
+    { id: "", title: "", content: "", isSelected: false }
+  );
 
   useEffect(() => {
     const savedNotes = JSON.parse(localStorage.getItem('notes'));
-    setNotes(savedNotes);
+    setNotes(savedNotes || notes);
   }, []);
-
+  console.log(notes)
+  
   function handleWhenSelectNote(note) {
-    setSelectedNote(note);
+    const updatedNote = { ...note, isSelected: true };
+    const updatedNotes = notes.map((n) => {
+      if (n.id !== note.id)
+        return { ...n, isSelected: false };
+
+      return updatedNote;
+    });
+
+    setNotes(updatedNotes);
+    setSelectedNote(updatedNote);
   }
 
   function handleWhenAddNote(newNote) {
@@ -35,13 +49,13 @@ export default function App() {
     });
   }
 
-  function handleSaveNote() {
+  function handleSaveNote(target) {
     if (!selectedNote.id) {
       const id = crypto.randomUUID();
-      const newNote = { id, ...selectedNote };
+      const newNote = { ...selectedNote, id };
 
       handleWhenAddNote(newNote);
-      handleWhenSelectNote(newNote);
+      handleWhenSelectNote(newNote, target);
 
       return;
     }
@@ -81,7 +95,7 @@ export default function App() {
                 type="button"
                 className="save-btn"
                 id="save-btn"
-                onClick={handleSaveNote}
+                onClick={(e) => handleSaveNote(e.target)}
               >
                 Simpan
               </button>

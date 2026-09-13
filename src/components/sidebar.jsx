@@ -6,6 +6,7 @@ export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
       id: crypto.randomUUID(),
       title: 'Untitled',
       content: '',
+      isSelected: false,
     };
 
     onAddNote(newNote);
