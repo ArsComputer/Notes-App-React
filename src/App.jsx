@@ -57,6 +57,8 @@ export default function App() {
   }
 
   function handleSaveNote() {
+    if (!selectedNote) return alert("Judul catatan tidak boleh kosong!");
+    if (!selectedNote.title) return alert("Judul catatan tidak boleh kosong!");
     if (!selectedNote.id) {
       const id = crypto.randomUUID();
       const newNote = { ...selectedNote, id };
