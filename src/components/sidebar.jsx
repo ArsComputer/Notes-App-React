@@ -1,6 +1,6 @@
 import { NoteCard } from "./noteCard.jsx";
 
-export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
+export function Sidebar({ notes, onAddNote, onNoteSelect }) {
   function handleAddNote() {
     const newNote = {
       id: crypto.randomUUID(),
@@ -18,12 +18,31 @@ export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
   function handleDeleteNote(noteId) {
     const newNotesList = notes.filter(note => note.id !== noteId);
 
-    onDeleteNote(newNotesList);
+    onAddNote(newNotesList);
+
+    return newNotesList;
   }
 
   function cardClickHandler(target, note) {
     if (target.classList.contains('delete-button')) {
-      handleDeleteNote(note.id);
+      const updatedNotes = handleDeleteNote(note.id);
+      
+      if (!note.isSelected) {
+        const selectedNote = updatedNotes.find(n => n.isSelected);
+        onNoteSelect(selectedNote, updatedNotes);
+        return;
+      }
+
+      const indexToSelect = notes.findIndex(n => n.id === note.id) - 1;
+      const noteToSelect = notes[indexToSelect];
+
+      if (indexToSelect === -1) {
+        onNoteSelect(null);
+        return;
+      }
+
+      onNoteSelect(noteToSelect, updatedNotes);
+
       return;
     }
 

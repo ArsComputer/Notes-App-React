@@ -3,20 +3,19 @@ import { Sidebar } from "./components/sidebar.jsx";
 
 export default function App() {
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState({
-    id: "",
-    title: "",
-    content: "",
-    isSelected: false,
-  });
+  const [selectedNote, setSelectedNote] = useState(null);
 
   useEffect(() => {
     const savedNotes = JSON.parse(localStorage.getItem("notes"));
     setNotes(savedNotes || notes);
   }, []);
-  console.log(selectedNote);
 
   function handleWhenSelectNote(note, newNotes = notes) {
+    if (!note) {
+      setSelectedNote(null);
+      return;
+    }
+
     const updatedNote = { ...note, isSelected: true };
     const updatedNotes = newNotes.map((n) => {
       if (n.id !== note.id) return { ...n, isSelected: false };
@@ -38,16 +37,21 @@ export default function App() {
     localStorage.setItem("notes", JSON.stringify(neutralNotes));
   }
 
-  function handleWhenDeleteNote(newNotes) {
-    setNotes(newNotes);
-    localStorage.setItem("notes", JSON.stringify(newNotes));
-  }
-
   function handleInputChange(value, notePropertyName) {
-    if (!selectedNote) return;
+    let currNote = selectedNote;
+
+    if (!currNote) {
+      currNote = {
+        id: "",
+        title: "",
+        content: "",
+        isSelected: false,
+      };
+    }
 
     setSelectedNote({
-      ...selectedNote,
+      ...currNote,
+      isSelected: true,
       [notePropertyName]: value,
     });
   }
@@ -80,7 +84,6 @@ export default function App() {
         notes={notes}
         onAddNote={handleWhenAddNote}
         onNoteSelect={handleWhenSelectNote}
-        onDeleteNote={handleWhenDeleteNote}
       />
 
       <main className="main-content">
@@ -92,7 +95,7 @@ export default function App() {
                 placeholder="Judul"
                 className="title-input"
                 id="title-input"
-                value={selectedNote.title}
+                value={selectedNote ? selectedNote.title : ""}
                 onChange={(e) => handleInputChange(e.target.value, "title")}
               />
               <button
@@ -108,7 +111,7 @@ export default function App() {
               placeholder="Masukkan catatan..."
               className="content-input"
               id="content-input"
-              value={selectedNote.content}
+              value={selectedNote ? selectedNote.content : ""}
               onChange={(e) => handleInputChange(e.target.value, "content")}
             ></textarea>
           </div>
