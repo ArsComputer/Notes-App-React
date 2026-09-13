@@ -13,11 +13,11 @@ export default function App() {
     const savedNotes = JSON.parse(localStorage.getItem('notes'));
     setNotes(savedNotes || notes);
   }, []);
-  console.log(notes)
+  // console.log(notes)
   
-  function handleWhenSelectNote(note) {
+  function handleWhenSelectNote(note, newNotes = notes) {
     const updatedNote = { ...note, isSelected: true };
-    const updatedNotes = notes.map((n) => {
+    const updatedNotes = newNotes.map((n) => {
       if (n.id !== note.id)
         return { ...n, isSelected: false };
 
@@ -28,9 +28,7 @@ export default function App() {
     setSelectedNote(updatedNote);
   }
 
-  function handleWhenAddNote(newNote) {
-    const newNotes = [...notes, newNote];
-
+  function handleWhenAddNote(newNotes) {
     setNotes(newNotes);
     localStorage.setItem('notes' ,JSON.stringify(newNotes));
   }

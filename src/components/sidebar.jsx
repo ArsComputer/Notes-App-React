@@ -9,8 +9,10 @@ export function Sidebar({ notes, onAddNote, onNoteSelect, onDeleteNote }) {
       isSelected: false,
     };
 
-    onAddNote(newNote);
-    onNoteSelect(newNote);
+    const newNotes = [...notes, newNote];
+
+    onAddNote(newNotes);
+    onNoteSelect(newNote, newNotes);
   }
 
   function handleDeleteNote(noteId) {
