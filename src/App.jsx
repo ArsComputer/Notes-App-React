@@ -1,30 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Sidebar } from "./components/sidebar.jsx";
 
 export default function App() {
-  const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(null);
-
-  useEffect(() => {
+  const [notes, setNotes] = useState(() => {
     const savedNotes = JSON.parse(localStorage.getItem("notes"));
-    setNotes(savedNotes || notes);
-  }, []);
+    return savedNotes || [];
+  });
+
+  const [draft, setDraft] = useState({
+    title: "",
+    content: "",
+  });
 
   function handleWhenSelectNote(note, newNotes = notes) {
     if (!note) {
-      setSelectedNote(null);
+      setNotes(newNotes);
+      setDraft({ title: "", content: "" });
       return;
     }
 
-    const updatedNote = { ...note, isSelected: true };
     const updatedNotes = newNotes.map((n) => {
-      if (n.id !== note.id) return { ...n, isSelected: false };
-
-      return updatedNote;
+      return { ...n, isSelected: n.id === note.id };
     });
 
     setNotes(updatedNotes);
-    setSelectedNote(updatedNote);
+    setDraft({
+      title: note.title,
+      content: note.content,
+    });
   }
 
   function handleWhenAddNote(newNotes) {
@@ -38,46 +41,55 @@ export default function App() {
   }
 
   function handleInputChange(value, notePropertyName) {
-    let currNote = selectedNote;
-
-    if (!currNote) {
-      currNote = {
-        id: "",
-        title: "",
-        content: "",
-        isSelected: false,
-      };
-    }
-
-    setSelectedNote({
-      ...currNote,
-      isSelected: true,
+    setDraft((currentDraft) => ({
+      ...currentDraft,
       [notePropertyName]: value,
-    });
+    }));
   }
 
   function handleSaveNote() {
-    if (!selectedNote) return alert("Judul catatan tidak boleh kosong!");
-    if (!selectedNote.title) return alert("Judul catatan tidak boleh kosong!");
-    if (!selectedNote.id) {
-      const id = crypto.randomUUID();
-      const newNote = { ...selectedNote, id };
-      const newNotes = [...notes, newNote];
+    if (!draft.title.trim()) {
+      return alert("Judul catatan tidak boleh kosong!");
+    }
 
-      handleWhenAddNote(newNotes);
-      handleWhenSelectNote(newNote, newNotes);
+    const selectedNote = notes.find((note) => note.isSelected);
 
+    if (!selectedNote) {
+      const newNote = {
+        id: crypto.randomUUID(),
+        title: draft.title,
+        content: draft.content,
+        isSelected: false,
+      };
+
+      const updatedNotes = [
+        ...notes.map((note) => ({ ...note, isSelected: false })),
+        newNote,
+      ];
+
+      handleWhenAddNote(updatedNotes);
+      handleWhenSelectNote(newNote, updatedNotes);
       return;
     }
+
+    const updatedNote = {
+      ...selectedNote,
+      title: draft.title,
+      content: draft.content,
+    };
 
     const updatedNotes = notes.map((note) => {
       if (note.id !== selectedNote.id) return note;
 
-      return selectedNote;
+      return {
+        ...note,
+        title: draft.title,
+        content: draft.content,
+      };
     });
 
-    setNotes(updatedNotes);
-    localStorage.setItem("notes", JSON.stringify(updatedNotes));
+    handleWhenAddNote(updatedNotes);
+    handleWhenSelectNote(updatedNote, updatedNotes);
   }
 
   return (
@@ -97,7 +109,7 @@ export default function App() {
                 placeholder="Judul"
                 className="title-input"
                 id="title-input"
-                value={selectedNote ? selectedNote.title : ""}
+                value={draft.title}
                 onChange={(e) => handleInputChange(e.target.value, "title")}
               />
               <button
@@ -113,7 +125,7 @@ export default function App() {
               placeholder="Masukkan catatan..."
               className="content-input"
               id="content-input"
-              value={selectedNote ? selectedNote.content : ""}
+              value={draft.content}
               onChange={(e) => handleInputChange(e.target.value, "content")}
             ></textarea>
           </div>

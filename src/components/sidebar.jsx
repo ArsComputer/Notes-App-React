@@ -25,6 +25,7 @@ export function Sidebar({ notes, onAddNote, onNoteSelect }) {
 
   function cardClickHandler(target, note) {
     if (target.classList.contains('delete-button')) {
+      const prevNotes = notes;
       const updatedNotes = handleDeleteNote(note.id);
       
       if (!note.isSelected) {
@@ -33,11 +34,11 @@ export function Sidebar({ notes, onAddNote, onNoteSelect }) {
         return;
       }
 
-      const indexToSelect = notes.findIndex(n => n.id === note.id) - 1;
-      const noteToSelect = notes[indexToSelect];
+      const indexToSelect = prevNotes.findIndex(n => n.id === note.id) - 1;
+      const noteToSelect = updatedNotes[indexToSelect];
 
       if (indexToSelect === -1) {
-        onNoteSelect(null);
+        onNoteSelect(null, updatedNotes);
         return;
       }
 
